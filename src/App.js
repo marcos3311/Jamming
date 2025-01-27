@@ -1,8 +1,9 @@
 import React from 'react';
+import JammingContainer from './containers/JammingContainer';
 
 const App = () => {
     return(
-        <h1>Hello World!</h1>
+        <JammingContainer />
     )
 }
 
