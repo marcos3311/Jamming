@@ -1,16 +1,16 @@
 import React from 'react';
+import Track from './Track';
 
-const Tracklist = ({ trackList }) => {
+const Tracklist = ({ trackList, handleFunction }) => {
     return (
-        <ul>
-            {trackList.map(track => 
-                (<div style={{display: 'flex', justifyContent: 'space-between',border: '1px solid black', marginTop: 15}}>
-                    <h3>{track.name}</h3>
-                    <h4>{track.artist}</h4>
-                    <p>{track.album}</p>
-                </div>)) 
-            }
-        </ul>
+        trackList && 
+            (<div>
+                {trackList.map(track => 
+                    <Track track={track} handleFunction={handleFunction} />
+                    ) 
+                }
+                {trackList.name}
+            </div>)
     )
 }
 

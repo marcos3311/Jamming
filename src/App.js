@@ -3,7 +3,7 @@ import JammingContainer from './containers/JammingContainer';
 
 const App = () => {
     return(
-        <JammingContainer />
+    <JammingContainer />
     )
 }
 
