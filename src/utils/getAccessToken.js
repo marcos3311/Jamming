@@ -1,10 +1,10 @@
 async function getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
-    console.log(code)
 
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
+    params.append("scope", "playlist-modify-public");
     params.append("code", code);
     params.append("redirect_uri", "http://localhost:3000");
     params.append("code_verifier", verifier);

@@ -5,17 +5,26 @@ import Playlist from '../components/Playlist';
 import Login from '../components/Login';
 import getAccessToken from '../utils/getAccessToken';
 import fetchTracks from '../utils/fetchTracks';
-// import seAuth from '../utils/auth.js';
+import fetchUser from '../utils/fetchUser';
+import fetchCreatePlaylist from '../utils/fetchCreatePlaylist';
+import fetchGetPlaylists from '../utils/fetchGetPlaylists';
+import Header from '../components/Header';
+import fetchAddPlaylist from '../utils/fetchAddPlaylist';
+
+const tracksContainerStyle = {
+    display: 'flex',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    gap: 50,
+    padding: 20
+}
 
 const JammingContainer = () => {
     const [inputData, setInputData] = useState('');
+    const [inputPlaylist, setInputPlaylist] = useState('');
     const [trackList, setTrackList] = useState([]);
-    const [playList, setPlayList] = useState([
-        {
-            name: 'Yonaguni',
-            artist: 'Bad Bunny',
-        },
-    ]);
+    const [playList, setPlayList] = useState([]);
     const [token, setToken] = useState((localStorage.getItem('token') && JSON.parse(localStorage.getItem('token'))?.expireDate - Date.now() > 0) ? 
         JSON.parse(localStorage.getItem('token')).token : 
         null
@@ -58,15 +67,45 @@ const JammingContainer = () => {
         setPlayList([]);
     }
 
-    console.log(trackList)
+    const handlePlaylist = async (e) => {
+        e.preventDefault();
+        if(inputPlaylist.trim() === '') return
+
+        const userId = await fetchUser(token).then(user => user.id);
+        const userPlaylists = await fetchGetPlaylists(token, userId).then(playlists => playlists.items);
+        const userPlaylistsNames = userPlaylists.map(playlist => playlist.name)
+
+        const playlistName = inputPlaylist.trim();
+        const alreadyExist = userPlaylistsNames.includes(playlistName);
+        const playlistUris = playList.map(track => track.uri);
+
+        if(!alreadyExist) {
+            const playlistId = await fetchCreatePlaylist(token, userId, playlistName).then(res => res.id);
+            fetchAddPlaylist(token, playlistId, playlistUris)
+        } else {
+            const playlistId = userPlaylists.find(playlist => playlist.name === playlistName).id;
+            fetchAddPlaylist(token, playlistId, playlistUris);
+        }
+
+    }
 
     return !token ? 
                 <Login />
             : (
                 <>
+                    <Header />
                     <SearchBar inputData={inputData} handleInputData={setInputData} handleSubmit={handleSubmit} />
-                    <SearchResults trackList={trackList} handleAdd={handleAdd} />
-                    <Playlist trackList={playList} handleDelete={handleDelete} handleSave={handleSave} />
+                    <div style={tracksContainerStyle}>
+                        <SearchResults trackList={trackList} handleAdd={handleAdd} />
+                        <Playlist 
+                            trackList={playList} 
+                            handleDelete={handleDelete} 
+                            handleSave={handleSave} 
+                            inputPlaylist={inputPlaylist} 
+                            handleInputPlaylist={setInputPlaylist} 
+                            submitPlaylist={handlePlaylist} 
+                        />
+                    </div>
                 </>
             )
         

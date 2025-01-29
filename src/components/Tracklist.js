@@ -1,10 +1,13 @@
 import React from 'react';
 import Track from './Track';
 
+const tracksStyle = {
+    width: '100%'
+}
 const Tracklist = ({ trackList, handleFunction }) => {
     return (
         trackList && 
-            (<div>
+            (<div style={tracksStyle}>
                 {trackList.map(track => 
                     <Track track={track} handleFunction={handleFunction} />
                     ) 

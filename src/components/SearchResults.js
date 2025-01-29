@@ -3,7 +3,7 @@ import Tracklist from './Tracklist';
 
 const SearchResults = ({ trackList, handleAdd }) => {
     return (
-        <section>
+        <section style={{width: '100%'}}>
             <h2>Results</h2>
             <Tracklist trackList={trackList} handleFunction={handleAdd} isPlayList={false} />
         </section>
