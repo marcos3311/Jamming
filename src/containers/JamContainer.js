@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import SearchResults from '../components/SearchResults';
 import Playlist from '../components/Playlist';
-import Login from '../components/Login';
-import getAccessToken from '../utils/getAccessToken';
 import fetchTracks from '../utils/fetchTracks';
 import fetchUser from '../utils/fetchUser';
 import fetchCreatePlaylist from '../utils/fetchCreatePlaylist';
 import fetchGetPlaylists from '../utils/fetchGetPlaylists';
 import Header from '../components/Header';
 import fetchAddPlaylist from '../utils/fetchAddPlaylist';
+import useAuth from '../hooks/useAuth';
 
 const tracksContainerStyle = {
     display: 'flex',
@@ -20,36 +19,18 @@ const tracksContainerStyle = {
     padding: 20
 }
 
-const JammingContainer = () => {
+const JamContainer = () => {
     const [inputData, setInputData] = useState('');
     const [inputPlaylist, setInputPlaylist] = useState('');
     const [trackList, setTrackList] = useState([]);
     const [playList, setPlayList] = useState([]);
-    const [token, setToken] = useState((localStorage.getItem('token') && JSON.parse(localStorage.getItem('token'))?.expireDate - Date.now() > 0) ? 
-        JSON.parse(localStorage.getItem('token')).token : 
-        null
-    );
-
-    useEffect(() => {
-        if(token) return;
-
-        const params = new URLSearchParams(window.location.search).get('code')
-        const clientId = process.env.REACT_APP_CLIENT_ID;
-        getAccessToken(clientId, params).then(res => {
-            console.log(res)
-            setToken(res);
-            localStorage.setItem('token', JSON.stringify({
-                token: res,
-                expireDate: Date.now() + (3600 * 1000),
-            }))
-        });
-    }, [token])
+    const token = useAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if(inputData.trim() === '') return;
 
-        fetchTracks(token, inputData).then(res => {setTrackList(res.tracks.items)});
+        fetchTracks(token.token, inputData).then(res => {setTrackList(res.tracks.items)});
 
         setInputData('');
     }
@@ -71,8 +52,8 @@ const JammingContainer = () => {
         e.preventDefault();
         if(inputPlaylist.trim() === '') return
 
-        const userId = await fetchUser(token).then(user => user.id);
-        const userPlaylists = await fetchGetPlaylists(token, userId).then(playlists => playlists.items);
+        const userId = await fetchUser(token.token).then(user => user.id);
+        const userPlaylists = await fetchGetPlaylists(token.token, userId).then(playlists => playlists.items);
         const userPlaylistsNames = userPlaylists.map(playlist => playlist.name)
 
         const playlistName = inputPlaylist.trim();
@@ -80,18 +61,16 @@ const JammingContainer = () => {
         const playlistUris = playList.map(track => track.uri);
 
         if(!alreadyExist) {
-            const playlistId = await fetchCreatePlaylist(token, userId, playlistName).then(res => res.id);
-            fetchAddPlaylist(token, playlistId, playlistUris)
+            const playlistId = await fetchCreatePlaylist(token.token, userId, playlistName).then(res => res.id);
+            fetchAddPlaylist(token.token, playlistId, playlistUris)
         } else {
             const playlistId = userPlaylists.find(playlist => playlist.name === playlistName).id;
-            fetchAddPlaylist(token, playlistId, playlistUris);
+            fetchAddPlaylist(token.token, playlistId, playlistUris);
         }
 
     }
 
-    return !token ? 
-                <Login />
-            : (
+    return (
                 <>
                     <Header />
                     <SearchBar inputData={inputData} handleInputData={setInputData} handleSubmit={handleSubmit} />
@@ -111,4 +90,4 @@ const JammingContainer = () => {
         
 }
 
-export default JammingContainer;
+export default JamContainer;

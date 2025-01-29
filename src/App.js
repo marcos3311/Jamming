@@ -1,9 +1,10 @@
-import React from 'react';
-import JammingContainer from './containers/JammingContainer';
+import React, {useState} from 'react';
+import JamContainer from './containers/JamContainer';
+
 
 const App = () => {
     return(
-    <JammingContainer />
+        <JamContainer />
     )
 }
 
