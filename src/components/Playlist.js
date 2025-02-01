@@ -3,7 +3,7 @@ import Tracklist from './Tracklist';
 
 const tracksStyle = {
     width: '100%',
-    height: '100%',
+    height: '460px',
     backgroundColor: '#121212',
     borderRadius: 10,
     padding: 15,
@@ -47,9 +47,14 @@ const Playlist = ({ trackList, handleDelete, handleSave, inputPlaylist, handleIn
             <form onSubmit={submitPlaylist} style={formStyle}>
                 <input type='text' value={inputPlaylist} onChange={({ target }) => handleInputPlaylist(target.value)} placeholder='Playlist name...' style={inputStyle} />
                 {
-                    inputPlaylist && <button type='submit' style={buttonStyle} disabled={trackList.length === 0}>Save Playlist to Spotify</button>
+                    (inputPlaylist && trackList.length > 0) && <button type='submit' style={{...buttonStyle,  }} disabled={trackList.length === 0}>Save Playlist to Spotify</button>
                 }
             </form>
+
+            {
+                trackList.length === 0 &&
+                    <p style={{textAlign: 'center', color:'gray', marginTop: 10}}>You haven't added any song to your playlist yet!</p>
+            }
 
             <Tracklist trackList={trackList} handleFunction={handleDelete} isPlaylist={true} />
         </section>

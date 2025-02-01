@@ -8,15 +8,22 @@ import Header from '../components/Header';
 import fetchAddPlaylist from '../utils/fetchAddPlaylist';
 import useAuth from '../hooks/useAuth';
 import Profile from '../components/Profile';
+import styles from './JamContainer.module.css'
 
 const tracksContainerStyle = {
     display: 'flex',
     width: '100%',
-    height: '100%',
     justifyContent: 'center',
     gap: 50,
     padding: 20,
     margin: 20
+}
+
+const mainStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100vw',
+    alignItems: 'center',
 }
 
 const JamContainer = () => {
@@ -75,19 +82,21 @@ const JamContainer = () => {
     return (
                 <>
                     <Header />
+                   <main style={mainStyle}>
                     {user && <Profile user={user}/>}
-                    <SearchBar inputData={inputData} handleInputData={setInputData} handleSubmit={handleSubmit} />
-                    <div style={tracksContainerStyle}>
-                        <SearchResults trackList={trackList} handleAdd={handleAdd} />
-                        <Playlist 
-                            trackList={playList} 
-                            handleDelete={handleDelete} 
-                            handleSave={handleSave} 
-                            inputPlaylist={inputPlaylist} 
-                            handleInputPlaylist={setInputPlaylist} 
-                            submitPlaylist={handlePlaylist} 
-                        />
-                    </div>
+                        <SearchBar inputData={inputData} handleInputData={setInputData} handleSubmit={handleSubmit} />
+                        <div className={styles.tracksContainer}>
+                            <SearchResults trackList={trackList} handleAdd={handleAdd} />
+                            <Playlist 
+                                trackList={playList} 
+                                handleDelete={handleDelete} 
+                                handleSave={handleSave} 
+                                inputPlaylist={inputPlaylist} 
+                                handleInputPlaylist={setInputPlaylist} 
+                                submitPlaylist={handlePlaylist} 
+                            />
+                        </div>
+                   </main>
                 </>
             )
         

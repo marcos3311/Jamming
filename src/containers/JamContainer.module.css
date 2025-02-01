@@ -1,0 +1,14 @@
+.tracksContainer {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 50px;
+    padding: 20px;
+    margin: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+    .tracksContainer {
+        flex-direction: column;
+    }
+}
