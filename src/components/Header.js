@@ -3,8 +3,10 @@ import React from 'react';
 const headerStyle = {
     display: 'flex',
     alignItems: 'center',
-    padding: 30,
+    padding: 20,
     flexDirection: 'column',
+    backgroundColor: 'black',
+    gap: 15
 }
 
 const logoStyle = {
@@ -13,7 +15,8 @@ const logoStyle = {
 
 const signatureStyle = {
     opacity: '0.8',
-    fontSize: 12
+    fontSize: 12,
+    color: 'white'
 }
 
 const Header = () => {

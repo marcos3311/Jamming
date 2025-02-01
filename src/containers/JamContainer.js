@@ -9,6 +9,7 @@ import fetchGetPlaylists from '../utils/fetchGetPlaylists';
 import Header from '../components/Header';
 import fetchAddPlaylist from '../utils/fetchAddPlaylist';
 import useAuth from '../hooks/useAuth';
+import Profile from '../components/Profile';
 
 const tracksContainerStyle = {
     display: 'flex',
@@ -16,7 +17,8 @@ const tracksContainerStyle = {
     height: '100%',
     justifyContent: 'center',
     gap: 50,
-    padding: 20
+    padding: 20,
+    margin: 20
 }
 
 const JamContainer = () => {
@@ -24,13 +26,14 @@ const JamContainer = () => {
     const [inputPlaylist, setInputPlaylist] = useState('');
     const [trackList, setTrackList] = useState([]);
     const [playList, setPlayList] = useState([]);
-    const token = useAuth();
+    const [token, user, playlists, updatePlaylists] = useAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         if(inputData.trim() === '') return;
 
-        fetchTracks(token.token, inputData).then(res => {setTrackList(res.tracks.items)});
+        fetchTracks(token, inputData).then(res => {setTrackList(res.tracks.items)});
 
         setInputData('');
     }
@@ -73,6 +76,7 @@ const JamContainer = () => {
     return (
                 <>
                     <Header />
+                    {user && <Profile user={user}/>}
                     <SearchBar inputData={inputData} handleInputData={setInputData} handleSubmit={handleSubmit} />
                     <div style={tracksContainerStyle}>
                         <SearchResults trackList={trackList} handleAdd={handleAdd} />

@@ -2,7 +2,8 @@ import React from 'react';
 import Track from './Track';
 
 const tracksStyle = {
-    width: '100%'
+    width: '100%',
+    height: '100%',
 }
 
 const Tracklist = ({ trackList, handleFunction }) => {

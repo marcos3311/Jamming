@@ -8,21 +8,25 @@ const formStyle = {
 }
 
 const inputStyle = {
-    borderRadius: 5,
+    borderRadius: 10,
     border: 'none',
-    backgroundColor: 'gray',
+    backgroundColor: '#1f1f1f',
     width: '20rem',
     padding: 10,
-    color: '#fff'
+    color: '#fff',
+    outline: 'none'
 }
 
 const btnStyle = {
     border: 'none',
     padding: 15,
-    borderRadius: 5,
-    backgroundColor: "#1DB954",
+    borderRadius: 10,
+    backgroundColor: "rgb(30, 215, 96)",
     color: '#fff',
-    width: '8rem'
+    width: '8rem',
+    fontSize:  '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer'
 }
 
 const SearchBar = ({ inputData, handleInputData, handleSubmit }) => {
@@ -36,6 +40,7 @@ const SearchBar = ({ inputData, handleInputData, handleSubmit }) => {
                 type='text' 
                 name='search' 
                 id='search' 
+                placeholder='Search...'
                 value={inputData} 
                 onChange={handleChange}
                 style={inputStyle}

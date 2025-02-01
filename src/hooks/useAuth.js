@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 function useAuth() {
     const [token, setToken] = useState(null);
+    const [user, setUser] = useState(null);
+    const [playlists, setPlaylists] = useState(null);
 
     const generateCodeVerifier = (length) => {
         let text = '';
@@ -85,15 +87,54 @@ function useAuth() {
                 setToken(data.access_token);
                 localStorage.setItem('token', data.access_token); 
             } else {
-                console.error('Error fetching token: ', data);
+                throw new Error('Error fetching token: ', data);
             }
         })
         .catch((error) => {
-            console.error('Error in fetch request: ', error);
+            console.error('Error in token fetch request: ', error);
         });
     }, []);
 
-    return { token };
+    // Fetch Spotify user
+    useEffect(() => {
+        if(!token) return;
+        fetch(`https://api.spotify.com/v1/me/`, {
+            method: "GET", headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data) {
+                setUser(data);
+            } else {
+                throw new Error('Error fetching user');
+            }
+        })
+        .catch((error) => console.log(error));
+    }, [token])
+
+    // Fetch Spotify user playlists
+    useEffect(() => {
+        if(user === null) return;
+        fetch(`https://api.spotify.com/v1/users/${user.id}/playlists`, 
+            {
+                method: "GET", 
+                headers: { 
+                    Authorization: `Bearer ${token}`, 
+                    'Content-Type': 'application/json'
+                }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data) {
+                setPlaylists(data)
+            } else {
+                throw new Error('Error fetching playlists')
+            }
+        })
+        .catch(error => console.log('Error in playlist fetch request: ', error))
+    }, [token, user])
+
+    return [token, user, playlists];
 }
 
 export default useAuth;
