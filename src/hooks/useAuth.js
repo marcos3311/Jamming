@@ -134,7 +134,7 @@ function useAuth() {
         .catch(error => console.log('Error in playlist fetch request: ', error))
     }, [token, user])
 
-    return [token, user, playlists];
+    return [token, user, playlists, setPlaylists];
 }
 
 export default useAuth;

@@ -6,10 +6,10 @@ const tracksStyle = {
     height: '100%',
     backgroundColor: '#121212',
     borderRadius: 10,
-    padding: 15,
+    padding: '15px 0px 0px 15px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
 }
 
 const SearchResults = ({ trackList, handleAdd }) => {

@@ -13,7 +13,7 @@ const inputStyle = {
     backgroundColor: '#1f1f1f',
     width: '20rem',
     padding: 10,
-    color: '#fff',
+    color: 'gray',
     outline: 'none'
 }
 

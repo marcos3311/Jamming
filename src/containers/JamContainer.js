@@ -55,22 +55,23 @@ const JamContainer = () => {
         e.preventDefault();
         if(inputPlaylist.trim() === '') return
 
-        const userId = await fetchUser(token.token).then(user => user.id);
-        const userPlaylists = await fetchGetPlaylists(token.token, userId).then(playlists => playlists.items);
-        const userPlaylistsNames = userPlaylists.map(playlist => playlist.name)
+        const userId = user.id;
+        const userPlaylists = playlists.items;
+        const userPlaylistsNames = userPlaylists.map(playlist => playlist.name);
 
         const playlistName = inputPlaylist.trim();
         const alreadyExist = userPlaylistsNames.includes(playlistName);
         const playlistUris = playList.map(track => track.uri);
 
         if(!alreadyExist) {
-            const playlistId = await fetchCreatePlaylist(token.token, userId, playlistName).then(res => res.id);
-            fetchAddPlaylist(token.token, playlistId, playlistUris)
+            const playlistId = await fetchCreatePlaylist(token, userId, playlistName).then(res => res.id);
+            fetchAddPlaylist(token, playlistId, playlistUris)
         } else {
             const playlistId = userPlaylists.find(playlist => playlist.name === playlistName).id;
-            fetchAddPlaylist(token.token, playlistId, playlistUris);
+            fetchAddPlaylist(token, playlistId, playlistUris);
         }
 
+        setPlayList([]);
     }
 
     return (

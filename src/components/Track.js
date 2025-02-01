@@ -16,11 +16,10 @@ const infoContainerStyle = {
 
 const buttonStyle = {
     border: 'none',
-    backgroundColor: 'rgb(30, 215, 96)',
     fontSize: 20,
     fontWeight: 'bolder',
-    height: '2rem',
-    width: '2rem',
+    minHeight: '30px',
+    minWidth: '30px',
     borderRadius: '50%',
     padding: 5,
     color: 'white',
@@ -28,12 +27,11 @@ const buttonStyle = {
 }
 
 
-const Track = ({ track, handleFunction, isPlayList }) => {
-    console.log(track)
+const Track = ({ track, handleFunction, isPlaylist }) => {
     return (
         <div style={containerStyle}>
             <div style={infoContainerStyle}>
-                <h3 style={{marginBottom: 5}}>{track.name}</h3>
+                <h3 style={{marginBottom: 5, fontSize: '1rem'}}>{track.name}</h3>
                 <h4 style={{fontSize: '14px', opacity: .6}}>
                     {
                         track.artists[0].name ? 
@@ -50,7 +48,7 @@ const Track = ({ track, handleFunction, isPlayList }) => {
                 </h4>
                 <p style={{fontSize:'12px', color:'gray'}}>{track.album?.name}</p>
             </div>
-            <button style={buttonStyle} onClick={() => handleFunction(track)}>{isPlayList ? '-' : '+'}</button>
+            <button style={{...buttonStyle, backgroundColor: isPlaylist ? 'rgb(215, 30, 30)' : 'rgb(30, 215, 96)',}} onClick={() => handleFunction(track)}>{isPlaylist ? '-' : '+'}</button>
         </div>
     )
 }
