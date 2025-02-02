@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 function useAuth() {
     const [token, setToken] = useState(null);
+    const [expireTime, setExpireTime] = useState(null);
     const [user, setUser] = useState(null);
     const [playlists, setPlaylists] = useState(null);
 
@@ -58,7 +59,8 @@ function useAuth() {
         // auxToken checks if already exist a token and returns if so
         const auxToken = localStorage.getItem('token');
         if(auxToken) {
-            setToken(auxToken)
+            setToken(auxToken);
+            setExpireTime(localStorage.getItem('expire'));
             return
         }
 
@@ -85,7 +87,10 @@ function useAuth() {
         .then((data) => {
             if (data.access_token) {
                 setToken(data.access_token);
+                setExpireTime((new Date()).getTime() + 3_600_000);
                 localStorage.setItem('token', data.access_token); 
+                localStorage.setItem('expire', (new Date()).getTime() + 3_600_000);
+                localStorage.setItem('refresh', data.refresh_token);
             } else {
                 throw new Error('Error fetching token: ', data);
             }
@@ -133,6 +138,45 @@ function useAuth() {
         })
         .catch(error => console.log('Error in playlist fetch request: ', error))
     }, [token, user])
+
+    // Refresh token
+    useEffect(() => {
+        const timeNow = new Date().getTime();
+        const refreshToken = localStorage.getItem('refresh');
+        if(!token) return;
+        if(!refreshToken) {
+            setToken(null);
+        }
+        if(expireTime - timeNow > 0) return;
+
+        console.log('refreshing token...')
+
+        fetch("https://accounts.spotify.com/api/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                grant_type: 'refresh_token',
+                refresh_token: refreshToken,
+                client_id: process.env.REACT_APP_CLIENT_ID,
+            })
+        })
+        .then((response) => response.json()) 
+        .then((data) => {
+            if (data.access_token) {
+                console.log('entro al refresh')
+                setToken(data.access_token);
+                setExpireTime((new Date()).getTime() + 3_600_000);
+                localStorage.setItem('token', data.access_token); 
+                localStorage.setItem('expire', (new Date()).getTime() + 3_600_000);
+            } else {
+                throw new Error('Error fetching refresh token: ', data);
+            }
+        })
+        .catch((error) => {
+            console.error('Error in refresh token fetch request: ', error);
+        });
+
+    }, [expireTime, token])
 
     return [token, user, playlists, setPlaylists];
 }
