@@ -59,6 +59,7 @@ function useAuth() {
         // auxToken checks if already exist a token and returns if so
         const auxToken = localStorage.getItem('token');
         if(auxToken) {
+
             setToken(auxToken);
             setExpireTime(localStorage.getItem('expire'));
             return
@@ -75,7 +76,7 @@ function useAuth() {
         params.append("client_id", clientId);
         params.append("grant_type", "authorization_code");
         params.append("code", code);
-        params.append("redirect_uri", "http://localhost:3000");
+        params.append("redirect_uri", "https://spectacular-tanuki-76b813.netlify.app/");
         params.append("code_verifier", verifier);
 
         fetch("https://accounts.spotify.com/api/token", {
