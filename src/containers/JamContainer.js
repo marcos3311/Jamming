@@ -10,15 +10,6 @@ import useAuth from '../hooks/useAuth';
 import Profile from '../components/Profile';
 import styles from './JamContainer.module.css'
 
-const tracksContainerStyle = {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'center',
-    gap: 50,
-    padding: 20,
-    margin: 20
-}
-
 const mainStyle = {
     display: 'flex',
     flexDirection: 'column',
@@ -31,7 +22,7 @@ const JamContainer = () => {
     const [inputPlaylist, setInputPlaylist] = useState('');
     const [trackList, setTrackList] = useState([]);
     const [playList, setPlayList] = useState([]);
-    const [token, user, playlists, updatePlaylists] = useAuth();
+    const [token, user, playlists] = useAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();

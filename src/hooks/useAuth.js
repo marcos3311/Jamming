@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function useAuth() {
     const [token, setToken] = useState(null);
@@ -167,6 +167,7 @@ function useAuth() {
                 setToken(data.access_token);
                 setExpireTime((new Date()).getTime() + 3_600_000);
                 localStorage.setItem('token', data.access_token); 
+                localStorage.setItem('refresh', data.refresh_token);
                 localStorage.setItem('expire', (new Date()).getTime() + 3_600_000);
             } else {
                 throw new Error('Error fetching refresh token: ', data);
@@ -178,7 +179,7 @@ function useAuth() {
 
     }, [expireTime, token])
 
-    return [token, user, playlists, setPlaylists];
+    return [token, user, playlists];
 }
 
 export default useAuth;
